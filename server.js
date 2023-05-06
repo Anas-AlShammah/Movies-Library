@@ -67,7 +67,7 @@ function searchHandel (req,res){
 }
 
 function videoHandel (req,res){
-  const url = `https://api.themoviedb.org/3/movie/${req.params.id}/watch/providers?api_key=b5ceed2df9b32887038e3dcccc471203`
+  const url = `https://api.themoviedb.org/3/movie/${req.params.id}/watch/providers?api_key=${apiKey}`
   
     axios.get(url)
     .then(result => {
@@ -82,7 +82,7 @@ function videoHandel (req,res){
 }
 
 function transHandel (req,res){
-  const url = "https://api.themoviedb.org/3/person/1/translations?api_key=b5ceed2df9b32887038e3dcccc471203&language=en-US"
+  const url = `https://api.themoviedb.org/3/person/1/translations?api_key=${apiKey}`
   try {
     axios.get(url)
     .then(result => {
