@@ -2,9 +2,15 @@ const express = require('express')
 
 const app = express()
 require('dotenv').config();
+const pg = require('pg');
+
+const client = new pg.Client('postgresql://localhost:5432/demo')
+
 const data = require('./Movie Data/data.json')
 const apiKey = process.env.APIkey;
 const axios = require('axios');
+server.use(express.json())
+
 app.get('/', (req, res) => {
   const data1 = {
     "title": data.title,
@@ -22,7 +28,8 @@ app.get('/trend', newRecipesHandler)
 
 app.get('/trans',transHandel)
 app.get('/video/:id',videoHandel)
-
+app.get('/getMovies',getMoviesHandler)
+app.post('/addMovie',addMovieHandeler)
 function newRecipesHandler(req, res) {
   const url = `https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`
   try {
@@ -118,6 +125,30 @@ function Recipe(id, title, release_date, poster_path, overview) {
   this.poster_path = poster_path;
   this.overview = overview;
 }
+function getMoviesHandler(req,res){
+  const sql='SELECT * FROM favrecipe';
+  client.query(sql)
+    .then(data=>{
+      res.send(data.rows)
+    })
+    .catch((error)=>{
+      errorHandler(error, req, res);
+    })
+
+}
+function addMovieHandeler(req,res){
+  const recipe= req.body;
+  const sql = `INSERT INTO favRecipe (title, summary)
+  VALUES ($1, $2);`
+  const values = [recipe.title , recipe.summary]; 
+  client.query(sql,values)
+  .then(data=>{
+      res.send("The data has been added successfully");
+  })
+  .catch((error)=>{
+      errorHandler(error,req,res)
+  })
+}
 function errorHandler(error, req, res) {
   const err = {
     status: 500,
@@ -138,4 +169,6 @@ app.use((req, res) => {
     responseText: "Sorry, something went wrong"
   });
 });
-app.listen(3000)
+client.connect()
+  .then(()=>{
+app.listen(3000)})
