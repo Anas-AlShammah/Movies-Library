@@ -12,3 +12,4 @@ npm i
 title of movie and path and over view
 search for movie
 and link
+post to addMovie 
