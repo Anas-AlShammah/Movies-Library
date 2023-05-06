@@ -9,7 +9,7 @@ const client = new pg.Client('postgresql://localhost:5432/demo')
 const data = require('./Movie Data/data.json')
 const apiKey = process.env.APIkey;
 const axios = require('axios');
-server.use(express.json())
+app.use(express.json())
 
 app.get('/', (req, res) => {
   const data1 = {
