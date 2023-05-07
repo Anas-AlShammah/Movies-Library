@@ -27,7 +27,7 @@ app.get('/favorite', (req, res) => {
 app.get('/trend', newRecipesHandler)
 
 app.get('/trans',transHandel)
-app.get('/video/:id',videoHandel)
+app.get('/popular',popularHandel)
 app.get('/getMovies',getMoviesHandler)
 app.post('/addMovie',addMovieHandeler)
 function newRecipesHandler(req, res) {
@@ -72,20 +72,27 @@ function searchHandel (req,res){
     errorHandler (error,req,res)
   }
 }
+function popularHandel(req, res) {
 
-function videoHandel (req,res){
-  const url = `https://api.themoviedb.org/3/movie/${req.params.id}/watch/providers?api_key=${apiKey}`
-  
+  const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&without_genres=99,10755&vote_count.gte=200&api_key=${apiKey}`
+
+  try {
     axios.get(url)
-    .then(result => {
-      let linkvideo=result.data.results.AR.link
-      res.json(linkvideo)
-    }
-      
-      )
-    
-    
-  
+      .then(result => {
+        res.json(result.data.results)
+
+      })
+
+
+      .catch((error) => {
+        console.log('sorry you have something error', error)
+        res.status(500).send(error);
+      })
+  } catch (error) {
+    errorHandler(error, req, res)
+  }
+
+
 }
 
 function transHandel (req,res){
