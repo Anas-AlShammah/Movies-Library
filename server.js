@@ -29,6 +29,9 @@ app.get('/trend', newRecipesHandler)
 app.get('/trans',transHandel)
 app.get('/popular',popularHandel)
 app.get('/getMovies',getMoviesHandler)
+app.put('/UPDATE/:id',putMoviesHandler)
+app.delete('/DELETE/:id',deleteMoviesHandler)
+app.get('/getMovies/:id',getMoviesById)
 app.post('/addMovie',addMovieHandeler)
 function newRecipesHandler(req, res) {
   const url = `https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`
@@ -94,7 +97,45 @@ function popularHandel(req, res) {
 
 
 }
+function putMoviesHandler(req,res){
 
+  const {id} = req.params;
+  console.log(req.body);
+  const sql = `UPDATE favRecipe
+  SET title = $1 ,summary = $2
+  WHERE id = ${id};`
+  const {title,summary} = req.body;
+  const values = [title,summary];
+  client.query(sql,values).then((data)=>{
+      res.send(data)
+  })
+  .catch((error)=>{
+      errorHandler(error,req,res)
+  })
+}
+
+
+
+function deleteMoviesHandler(req,res){
+  const sql=`SELECT * FROM favRecipe WHERE id=${req.params.id}`;
+  client.query(sql)
+  .then((data)=>{
+      res.status(202).send(data)
+  })
+  .catch((error)=>{
+      errorHandler(error,req,res)
+  })
+}
+function getMoviesById(req,res){
+  const sql=`SELECT * FROM favRecipe WHERE id=${req.params.id}`;
+  client.query(sql)
+  .then(data=>{
+    res.send(data.rows)
+  })
+  .catch((error)=>{
+    errorHandler(error, req, res);
+  })
+}
 function transHandel (req,res){
   const url = `https://api.themoviedb.org/3/person/1/translations?api_key=${apiKey}`
   try {
