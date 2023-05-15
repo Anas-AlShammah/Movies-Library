@@ -30,7 +30,7 @@ app.get('/trans',transHandel)
 app.get('/popular',popularHandel)
 app.get('/getMovies',getMoviesHandler)
 app.put('/UPDATE/:id',putMoviesHandler)
-app.delete('/DELETE/:id',deleteMoviesHandler)
+app.delete('/delete/:id',deleteMoviesHandler)
 app.get('/getMovies/:id',getMoviesById)
 app.post('/addMovie',addMovieHandeler)
 function newRecipesHandler(req, res) {
@@ -114,18 +114,21 @@ function putMoviesHandler(req,res){
   })
 }
 
-
-
-function deleteMoviesHandler(req,res){
-  const sql=`SELECT * FROM favRecipe WHERE id=${req.params.id}`;
-  client.query(sql)
-  .then((data)=>{
-      res.status(202).send(data)
-  })
-  .catch((error)=>{
-      errorHandler(error,req,res)
-  })
+function deleteMoviesHandler(req, res) {
+  const sql = 'DELETE FROM favRecipe WHERE id = $1';
+  const values = [req.params.id];
+  client.query(sql, values)
+    .then(data => {
+      res.status(202).send(data);
+    })
+    .catch(error => {
+      errorHandler(error, req, res);
+    });
 }
+
+
+
+ 
 function getMoviesById(req,res){
   const sql=`SELECT * FROM favRecipe WHERE id=${req.params.id}`;
   client.query(sql)
