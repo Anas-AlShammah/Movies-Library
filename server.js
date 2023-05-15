@@ -5,7 +5,7 @@ require('dotenv').config();
 const pg = require('pg');
 const databaseUrl= process.env.DATABASE_URL;
 const client = new pg.Client(databaseUrl)
-let port=process.env.PORT;
+let port=process.env.PORT || 3000 ;
 const data = require('./Movie Data/data.json')
 const apiKey = process.env.APIkey;
 const axios = require('axios');
