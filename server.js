@@ -3,9 +3,9 @@ const express = require('express')
 const app = express()
 require('dotenv').config();
 const pg = require('pg');
-
-const client = new pg.Client('postgresql://localhost:5432/demo')
-
+const databaseUrl= process.env.DATABASE_URL;
+const client = new pg.Client(databaseUrl)
+let port=process.env.PORT;
 const data = require('./Movie Data/data.json')
 const apiKey = process.env.APIkey;
 const axios = require('axios');
@@ -222,4 +222,4 @@ app.use((req, res) => {
 });
 client.connect()
   .then(()=>{
-app.listen(3000)})
+app.listen(port)})
